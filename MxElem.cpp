@@ -621,10 +621,6 @@ void MxElem::MakeLodwinTfo(double * Slodwin){
    int ldb = NOrbTot;
    int ldc = NOrbTot;
    dgemm_(&notrans, &trans, &m, &n, &k, &alpha, V, &lda, V, &ldb, &beta, Slodwin, &ldc);
-   
-   /*for (int i=0; i<N; i++)
-      for (int j=0; j<N; j++)
-         if (fabs(Slodwin[i+N*j])<1e-15) Slodwin[i+N*j]=0.0;*/
 
    delete [] V;
 

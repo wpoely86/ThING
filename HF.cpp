@@ -227,8 +227,6 @@ double HF::CalcEnergy(input & problem, MxElem & elements, bool generalized){
          //Step 3(NOK) part2: Solve Gz = lambda z
          //cout << "Condition number G : " << GetConditionNumber(G,N) << " [condition number F : " << GetConditionNumber(F,N) << "]." << endl;
          dsyevd_(&jobz, &uplo, &N, G, &lda_, eigs, work, &lwork, iwork, &liwork, &info);
-         
-         //cout << "Info = " << info << endl;
 
          //Step 3(NOK) part3: Calc x = TFO z and store in F.
          dgemm_(&notrans, &notrans, &m, &n, &kbis, &alpha, TFO, &lda_, G, &ldb_, &beta, F, &ldc_); //TFO * G -> F
