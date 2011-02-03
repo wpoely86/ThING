@@ -1,0 +1,12 @@
+Basisset=cc-pVDZ
+Charge=0
+RotationSymmetry=n
+
+Distances=0
+
+Cores=3
+1 O 0 0 0.218913417
+2 H 0 1.4144788 -0.875655559
+3 H 0 -1.4144788 -0.875655559
+
+
