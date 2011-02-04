@@ -1,0 +1,66 @@
+Program information
+   
+      ThING Is Not Gaussian is a rudimentary program to calculate
+      matrix elements of gaussian contractions using recursion
+      relations.
+      
+Copyright notice
+
+      Copyright 2011, 2011 Sebastian Wouters
+      <sebastianwouters@gmail.com>
+      
+Copyright permission
+   
+      This file is part of ThING Is Not Gaussian.
+
+      ThING Is Not Gaussian is free software: you can redistribute
+      it and/or modify it under the terms of the GNU General 
+      Public License as published by the Free Software Foundation,
+      either version 3 of the License, or (at your option) any
+      later version.
+
+      ThING Is Not Gaussian is distributed in the hope that it will
+      be useful, but WITHOUT ANY WARRANTY; without even the implied
+      warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+      See the GNU General Public License for more details.
+
+      You should have received a copy of the GNU General Public
+      License along with ThING Is Not Gaussian. If not, see 
+      <http://www.gnu.org/licenses/>.
+      
+The concept
+
+      In quantum chemistry calculations, contractions of gaussians
+      are often used to approximate atomic orbitals. This way, one
+      and two body matrix elements can be evaluated analytically.
+      The integrals corresponding to higher orbital angular momentum
+      can also be expressed with recursion relations in function of
+      integrals with lower angular momentum. It is the subject of
+      "Efficient recursive computation of molecular integrals over
+      Cartesian Gaussian Functions", by S. Obara and A. Saika, in
+      J. Chem. Phys. 84 (7), 1986. The ideas presented in the paper
+      are implemented in this program.
+      
+      A basic unrestricted Hartree Fock algorithm is also included
+      to assert the implementation of the recursion relations. Note
+      that I give no guarantee for convergence for all atoms and
+      molecules with all basis sets, but a lot of them do converge
+      (e.g. the ones in "example/").
+      
+Outline of the code
+
+      First you should make a startup file. An example is given in
+      "start.stp" and several others can be found in "examples/".
+
+      In main an input object is created that reads the startup
+      file in. The basis sets can be found in "basissets/", and
+      others can be downloaded from <https://bse.pnl.gov/bse/portal>.
+      The format should be "Gaussian 94".
+      
+      Once the input is read in, the matrix elements can be
+      constructed with MxElem::Init. You can then fetch them from
+      the MxElem class as is done by the HF class.
+
+      Before you can compile you should install BLAS, LAPACK and GMP.
+      I use ATLAS for BLAS and LAPACK on Ubuntu 10.10.
+      
