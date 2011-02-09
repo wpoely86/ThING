@@ -76,11 +76,18 @@ HF::~HF(){
  */
 double HF::CalcEnergy(input & problem, MxElem & elements){
 
-   //Init the problem
+   //Set some solving parameters
+   double mixingfactor = 0.0; // mixingfactor*Fock[previous] + (1-mixingfactor)*Fock[now]
+   double Zscaling = 1.0; // Znucl(program,start) = Znucl(real)*Zscaling
+   double Zpower = 0.75; // Power to rescale Zscaling after convergence for Znucl(prog,start) (last SCF calculation: Zscaling=1.0) (Zpower < 1.0 !!)
+   double convcrit = 1e-10; // criterium for convergence: 2-norm(Fock[now]-Fock[previous]) < convcritF
 
+   //Init the problem
    int Nelectrons = problem.NumberOfElectrons();
    int NOrbTot = elements.gNOrbTot();
-   double mixingfactor = 0.0; // mixingfactor*Fock[previous] + (1-mixingfactor)*Fock[now]
+   cout <<  "Number of electrons in the system: " << Nelectrons << endl;
+   cout <<  "Number of basis functions in the system (per spin projection): " << NOrbTot << endl;
+   
    cout.precision(12);
 
    //Init part 1: Declare some constants for the problem solver
@@ -112,7 +119,6 @@ double HF::CalcEnergy(input & problem, MxElem & elements){
    //Init part 3 : Obtain the canonical transformation (S) for the first guess and possibly for the TFO mx.
    double * V = new double[NOrbTot*NOrbTot];
    //elements.CanOrth(V);
-
    for (int i=0; i<NOrbTot*NOrbTot; i++)
       V[i] = 0.0;
 
@@ -149,18 +155,14 @@ double HF::CalcEnergy(input & problem, MxElem & elements){
 
    //Init part 7 : Make sum lowest occ (j) of V[m,j]*V[n,j] and store in S[m,n] --> SYMMETRIC MX
    
-   cout <<  "Number of electrons in the system: " << Nelectrons << endl;
-   
    dgemm_(&notrans, &trans, &m, &n, &kNel, &alpha, F, &lda_, F, &ldb_, &beta, S, &ldc_);
    
    //Iterate:
 
-   double convcrit = 1e-10;
    double FockDifference = 1.0;
    double Enow = 0.0;
    double ENuclPot = elements.NuclPotEn(problem);
    int iteration = 0;
-   double Zscaling = 1.0;
 
    while (FockDifference>=convcrit){
 
@@ -216,6 +218,7 @@ double HF::CalcEnergy(input & problem, MxElem & elements){
       
       cout << "    Energy HF at iteration " << iteration << "  =  " << Enow << " and ||F - Fold||  =  " << FockDifference << endl;
 
+      //Step 7: If it is converged for a Zscaling different from 1.0, restart with a Zscaling a bit closer to 1.0.
       if ((FockDifference<convcrit)&&(Zscaling!=1.0)){
          cout << "The calculation with Zscaling = " << Zscaling << " has converged: Energy HF at iteration " << iteration << "  =  " << Enow << endl;
          Enow = 0.0;
@@ -224,7 +227,7 @@ double HF::CalcEnergy(input & problem, MxElem & elements){
          if (fabs(Zscaling-1.0)<=0.01)
             Zscaling = 1.0;
          else
-            Zscaling = pow(Zscaling,0.75);
+            Zscaling = pow(Zscaling,Zpower);
       }
 
    }
@@ -288,12 +291,12 @@ void HF::BuildFock(double * F, double * S, MxElem & elements, int NOrbTot, doubl
       for (int k=l; k<NOrbTot; k++){
 
          //One body elements are diagonal in the spin
-         F[2*l + N*2*k] = F[2*l+1 + N*(2*k+1)] = elements.gKEseparate(l,k) + Zscaling*(elements.gTelem(l,k)-elements.gKEseparate(l,k));
+         F[2*l + N*2*k] = F[2*l+1 + N*(2*k+1)] = (1.0-Zscaling)*elements.gKEseparate(l,k) + Zscaling*elements.gTelem(l,k);
          F[2*l + N*(2*k+1)] = F[2*l+1 + N*2*k] = 0.0;
 
-         //Two body elements: Direct coulomb is diagonal in the spin
          for (int m=0; m<NOrbTot; m++){
 
+            //Two body elements: Direct coulomb is diagonal in the spin
             double addition = elements.gVelem(l,m,k,m)*(S[2*m + N*2*m] + S[2*m+1 + N*(2*m+1)]);
             F[2*l + N*2*k] += addition;
             F[2*l+1 + N*(2*k+1)] += addition;
@@ -305,19 +308,18 @@ void HF::BuildFock(double * F, double * S, MxElem & elements, int NOrbTot, doubl
                F[2*l+1 + N*(2*k+1)] += addition;
 
             }
+            
+            //Two body elements: Exchange not diagonal in the spin
+            for (int n=0; n<NOrbTot; n++){
+            
+               F[2*l + N*2*k] -= elements.gVelem(l,m,n,k)*S[2*m + N*2*n];
+               F[2*l+1 + N*(2*k+1)] -= elements.gVelem(l,m,n,k)*S[2*m+1 + N*(2*n+1)];
+               F[2*l+1 + N*2*k] -= elements.gVelem(l,m,n,k)*S[2*m + N*(2*n+1)];
+               F[2*l + N*(2*k+1)] -= elements.gVelem(l,m,n,k)*S[2*m+1 + N*2*n];
+     
+            }
          }
       }
-
-   //Two body elements: Exchange not necessarily diagonal
-   for (int l=0; l<N; l++){
-      int spinl = l%2; //0 is up, 1 is down
-      for (int k=l; k<N; k++){
-         int spink = k%2; //0 is up, 1 is down
-         for (int m=0; m<NOrbTot; m++) //use 2*m+spink
-            for (int n=0; n<NOrbTot; n++) //use 2*n+spinl
-               F[l+N*k] -= elements.gVelem(l/2,m,n,k/2)*S[2*m+spink + N*(2*n+spinl)];
-      }
-   }
 
 }
 
