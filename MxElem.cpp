@@ -783,11 +783,6 @@ void MxElem::Init(input & readin){
    MxElemFiller filler(readin);
    int count1, count2, count3, count4, start, start2, start3;
    double OneBodyElement;
-   
-   int symmaxis = 0;
-   if ((readin.gRotationSymm()=='x')||(readin.gRotationSymm()=='X')) symmaxis = 1;
-   else if ((readin.gRotationSymm()=='y')||(readin.gRotationSymm()=='Y')) symmaxis = 2;
-   else if ((readin.gRotationSymm()=='z')||(readin.gRotationSymm()=='Z')) symmaxis = 3;
 
    count1 = -1;
 
@@ -835,32 +830,14 @@ void MxElem::Init(input & readin){
 
                            count2++;
                            //If they're centered on the same atom and n1i+n2i odd for i=x,y or z -> Overlap & KE 0.0
-                           //If they're centered on different atoms and n1i+n2i odd for i!=RotationSymm -> Overlap & KE 0.0
-                           if (i==j){
-                              if ((((n1x+n2x)%2)!=0)||(((n1y+n2y)%2)!=0)||(((n1z+n2z)%2)!=0)){
-                                 setSoverlap(count1,count1+count2,0.0);
-                                 setKEseparate(count1,count1+count2,0.0);
-                                 OneBodyElement = 0.0;
-                              } else {
-                                 setSoverlap(count1,count1+count2,filler.Overlap(i,k,n1x,n1y,n1z,j,l,n2x,n2y,n2z));
-                                 OneBodyElement = filler.KE(i,k,n1x,n1y,n1z,j,l,n2x,n2y,n2z);
-                                 setKEseparate(count1,count1+count2,OneBodyElement);
-                              }
+                           if ((i==j)&&((((n1x+n2x)%2)!=0)||(((n1y+n2y)%2)!=0)||(((n1z+n2z)%2)!=0))){
+                              setSoverlap(count1,count1+count2,0.0);
+                              setKEseparate(count1,count1+count2,0.0);
+                              OneBodyElement = 0.0;
                            } else {
-                              
-                              if (  ((symmaxis==1)&&((((n1y+n2y)%2)!=0)||(((n1z+n2z)%2)!=0))) || 
-                                    ((symmaxis==2)&&((((n1x+n2x)%2)!=0)||(((n1z+n2z)%2)!=0))) ||
-                                    ((symmaxis==3)&&((((n1y+n2y)%2)!=0)||(((n1x+n2x)%2)!=0))) ){
-                                 setSoverlap(count1,count1+count2,0.0);
-                                 setKEseparate(count1,count1+count2,0.0);
-                                 OneBodyElement = 0.0;
-                              } else {
-                                 setSoverlap(count1,count1+count2,filler.Overlap(i,k,n1x,n1y,n1z,j,l,n2x,n2y,n2z));
-                                 OneBodyElement = filler.KE(i,k,n1x,n1y,n1z,j,l,n2x,n2y,n2z);
-                                 setKEseparate(count1,count1+count2,OneBodyElement);
-                              }
-                              
-                              
+                              setSoverlap(count1,count1+count2,filler.Overlap(i,k,n1x,n1y,n1z,j,l,n2x,n2y,n2z));
+                              OneBodyElement = filler.KE(i,k,n1x,n1y,n1z,j,l,n2x,n2y,n2z);
+                              setKEseparate(count1,count1+count2,OneBodyElement);
                            }
                            
                            for (int Ncore=0; Ncore<readin.gNcores(); Ncore++)
