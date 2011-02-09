@@ -72,10 +72,9 @@ HF::~HF(){
  * Calculate the energy of the unrestricted HF solution
  * @param problem definition of the problem (read in from a setup file)
  * @param elements the overlap, one body and two body matrix elements of the problem
- * @param generalized boolean to decide whether to solve the generalized eigenvalue problem or to transform the problem
  * @return the HF energy
  */
-double HF::CalcEnergy(input & problem, MxElem & elements, bool generalized){
+double HF::CalcEnergy(input & problem, MxElem & elements){
 
    //Init the problem
 
@@ -124,20 +123,6 @@ double HF::CalcEnergy(input & problem, MxElem & elements, bool generalized){
          S[2*i+1 + N*2*j] = S[2*i + N*(2*j+1)] = 0.0;
       }
    //cout << "Condition number S : " << GetConditionNumber(S,N) << endl;
-   double * TFO;
-   double * G;
-   if (!generalized){
-
-      TFO = new double[N*N]; // TFO = V * D^(-1/2) => Can Orth
-      for (int i=0; i<NOrbTot; i++)
-         for (int j=0; j<NOrbTot; j++){
-            //first of a pair is always up, second down: so ordering: (0, up) (0, down) (1, up) ....
-            TFO[2*i + N*2*j] = TFO[2*i+1 + N*(2*j+1)] = V[i+NOrbTot*j];
-            TFO[2*i + N*(2*j+1)] = TFO[2*i+1 + N*2*j] = 0.0;
-         }
-      G = new double[N*N]; // G = TFO^T * F * TFO
-
-   }
 
    //Init part 5 : Get a first guess -> Can ortho wave functions
    for (int i=0; i<NOrbTot; i++)
@@ -155,7 +140,6 @@ double HF::CalcEnergy(input & problem, MxElem & elements, bool generalized){
    char notrans = 'N';
    int m = N;
    int kNel = Nelectrons;
-   int kbis = N;
    int n = N;
    double alpha = 1.0;
    double beta = 0.0;
@@ -199,45 +183,22 @@ double HF::CalcEnergy(input & problem, MxElem & elements, bool generalized){
 
          }
 
-      //Step 3: Solve the problem:
-      //If generalized problem: fill S and solve Fx = lambda Sx (x eigenvectors stored in F).
-      //If not: build G = TFO^T F TFO, solve Gz = lambda z, calculate x = TFO z and store in F.
-      if (generalized){
-      
-         //Step 3(OK) part1 : Refill the upper triangle half of S as the values of S are destroyed by the algorithm.
-         for (int i=0; i<NOrbTot; i++)
-            for (int j=i; j<NOrbTot; j++){
-               S[2*i + N*2*j] = S[2*i+1 + N*(2*j+1)] = elements.gSoverlap(i,j);
-               S[2*i+1 + N*2*j] = S[2*i + N*(2*j+1)] = 0.0;
-            }
+      //Step 3: Refill the upper triangle half of S as the values of S are destroyed by the algorithm.
+      for (int i=0; i<NOrbTot; i++)
+         for (int j=i; j<NOrbTot; j++){
+            S[2*i + N*2*j] = S[2*i+1 + N*(2*j+1)] = elements.gSoverlap(i,j);
+            S[2*i+1 + N*2*j] = S[2*i + N*(2*j+1)] = 0.0;
+         }
 
-         //Step 3(OK) part2: Solve the generalized eigenvalue problem (for both eigenvalues and eigenvectors).
-         //cout << "Condition number F : " << GetConditionNumber(F,N) << endl;
-         dsygvd_(&itype, &jobz, &uplo, &N, F, &lda, S, &ldb, eigs, work, &lwork, iwork, &liwork, &info);
+      //Step 4: Solve the generalized eigenvalue problem (for both eigenvalues and eigenvectors).
+      //cout << "Condition number F : " << GetConditionNumber(F,N) << endl;
+      dsygvd_(&itype, &jobz, &uplo, &N, F, &lda, S, &ldb, eigs, work, &lwork, iwork, &liwork, &info);
 
-      } else {
-         //Step 3(NOK) part1: Build G
-         for (int i=0; i<N; i++)
-            for (int j=i; j<N; j++)
-               F[j+N*i] = F[i+N*j]; //Maybe use a symmetric * general matrix multiplier in lapack. Check...
-
-         dgemm_(&notrans, &notrans, &m, &n, &kbis, &alpha, F, &lda_, TFO, &ldb_, &beta, S, &ldc_); //F * TFO -> S
-         dgemm_(&trans, &notrans, &m, &n, &kbis, &alpha, TFO, &lda_, S, &ldb_, &beta, G, &ldc_); //TFO^T * S -> G
-
-         //Step 3(NOK) part2: Solve Gz = lambda z
-         //cout << "Condition number G : " << GetConditionNumber(G,N) << " [condition number F : " << GetConditionNumber(F,N) << "]." << endl;
-         dsyevd_(&jobz, &uplo, &N, G, &lda_, eigs, work, &lwork, iwork, &liwork, &info);
-
-         //Step 3(NOK) part3: Calc x = TFO z and store in F.
-         dgemm_(&notrans, &notrans, &m, &n, &kbis, &alpha, TFO, &lda_, G, &ldb_, &beta, F, &ldc_); //TFO * G -> F
-
-      }
-
-      //Step 4: Make sum lowest occ (j) of V[m,j]*V[n,j] and store in S[m,n]
+      //Step 5: Make sum lowest occ (j) of V[m,j]*V[n,j] and store in S[m,n]
 
       dgemm_(&notrans, &trans, &m, &n, &kNel, &alpha, F, &lda_, F, &ldb_, &beta, S, &ldc_);
 
-      //Step 5: Enow to Eprev, Calculate the HF energy and store it at Enow.
+      //Step 6: Calculate the HF energy and store it at Enow.
       Enow = ENuclPot;
       for (int i=0; i<Nelectrons; i++)
          Enow += eigs[i];
@@ -278,10 +239,6 @@ double HF::CalcEnergy(input & problem, MxElem & elements, bool generalized){
    delete [] eigs;
    delete [] work;
    delete [] iwork;
-   if (!generalized){
-      delete [] TFO;
-      delete [] G;
-   }
 
    //Terminate part 2: Return the HF energy
    return Enow;

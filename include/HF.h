@@ -62,7 +62,7 @@ class HF{
       double GetConditionNumber(double *, int);
 
       //Calculate the HF g.s. energy
-      double CalcEnergy(input &, MxElem &, bool);
+      double CalcEnergy(input &, MxElem &);
 
    private:
 

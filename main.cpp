@@ -71,8 +71,7 @@ int main(void){
    //setup.RemoveFromDisk();
    
    HF HFSolver;
-   bool solveHFgeneralized = true;
-   HFSolver.CalcEnergy(readin,setup,solveHFgeneralized);
+   HFSolver.CalcEnergy(readin,setup);
 
    return 0;
 
