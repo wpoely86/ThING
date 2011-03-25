@@ -41,6 +41,9 @@
 
 #include "preamble.h"
 
+namespace ThING
+{
+
 class R{
 
    friend ostream &operator<<(ostream &output, R &);
@@ -82,6 +85,8 @@ class R{
       double zco;
       
 };
+
+}
 
 #endif
 

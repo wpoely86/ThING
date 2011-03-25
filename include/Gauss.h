@@ -42,6 +42,9 @@
 
 #include "preamble.h"
 
+namespace ThING
+{
+
 class Gauss{
 
    friend ostream &operator<<(ostream &output, Gauss &);
@@ -89,6 +92,8 @@ class Gauss{
       bool init;
 
 };
+
+}
 
 #endif
 

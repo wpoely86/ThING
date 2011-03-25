@@ -57,6 +57,9 @@
 #include "Gauss.h"
 #include "R.h"
 
+namespace ThING
+{
+
 class input{
 
    public:
@@ -116,6 +119,8 @@ class input{
       int getZ(string);
 
 };
+
+}
 
 #endif
 

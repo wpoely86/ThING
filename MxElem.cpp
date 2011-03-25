@@ -52,6 +52,7 @@
 #include "MxElem.h"
 #include "MxElemFiller.h"
 
+using namespace ThING;
 
 /**
  * Constructor for the MxElem class

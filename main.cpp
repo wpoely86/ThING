@@ -57,6 +57,8 @@ void printGPL(){
 
 }
 
+using namespace ThING;
+
 int main(void){
 
    printGPL();

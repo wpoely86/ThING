@@ -52,6 +52,9 @@
 #include "preamble.h"
 #include "input.h"
 
+namespace ThING
+{
+
 class MxElem{
 
    public:
@@ -145,5 +148,7 @@ class MxElem{
       void allocate();
 
 };
+
+}
 
 #endif

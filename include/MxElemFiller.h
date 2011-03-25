@@ -53,6 +53,9 @@
 #include "input.h"
 #include "R.h"
 
+namespace ThING
+{
+
 class MxElemFiller{
 
    public:
@@ -91,5 +94,7 @@ class MxElemFiller{
 
 
 };
+
+}
 
 #endif

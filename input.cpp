@@ -55,6 +55,8 @@
 #include "Gauss.h"
 #include "R.h"
 
+using namespace ThING;
+
 int MENDELJEV = 118;
 
 

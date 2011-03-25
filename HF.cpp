@@ -43,6 +43,7 @@
 #include "MxElem.h"
 #include "HF.h"
 
+using namespace ThING;
 
 /** 
  * Constructor for the HF class

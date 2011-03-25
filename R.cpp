@@ -39,6 +39,8 @@
 #include "preamble.h"
 #include "R.h"
 
+using namespace ThING;
+
 /** 
  * Constructor for the R class
  * @param xco the x coordinate
@@ -75,6 +77,8 @@ R::~R(){
 }
 
 
+namespace ThING
+{
 /**
  * Ostream overloader
  * @param output the ostream to write the info to
@@ -85,6 +89,7 @@ ostream &operator<<(ostream &output, R & R_p){
    output << "[ " << R_p.gxco() << " ; " << R_p.gyco() << " ; " << R_p.gzco() << " ]";
    return output;
 
+}
 }
 
 

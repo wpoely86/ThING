@@ -45,6 +45,9 @@
 #include "input.h"
 #include "MxElem.h"
 
+namespace ThING
+{
+
 class HF{
 
    public:
@@ -73,6 +76,8 @@ class HF{
       double TwoNormOfDifference(double *, double *, int);
 
 };
+
+}
 
 #endif
 

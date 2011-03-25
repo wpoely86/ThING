@@ -40,6 +40,7 @@
 #include "preamble.h"
 #include "Gauss.h"
 
+using namespace ThING;
 
 /**
  * Constructor for the Gauss class
@@ -201,7 +202,8 @@ void Gauss::set(int i, int Ngaussian, double * alphas, double * coeff, char orbi
 
 }
 
-
+namespace ThING
+{
 /**
  * Ostream overloader
  * @param output the ostream to write the info to
@@ -218,6 +220,7 @@ ostream &operator<<(ostream &output, Gauss & krusty){
    }
    return output;
 
+}
 }
 
 
