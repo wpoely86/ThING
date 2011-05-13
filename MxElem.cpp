@@ -636,7 +636,7 @@ void MxElem::DoLodwinTfo(){
    int NOrb3 = NOrbTot*NOrb2;
    int NOrb4 = NOrb2*NOrb2;
    
-   //Step 1. Fetch the Lodwin transformation. Notice that it doesn't have to be symmetric: possibly first blockdiagonaltfo and then full one.
+   //Step 1. Fetch the Lodwin transformation.
    double * Slodwin = new double[NOrb2];
    MakeLodwinTfo(Slodwin);
    
@@ -709,20 +709,13 @@ void MxElem::DoLodwinTfo(){
       for (int j=0; j<NOrbTot; j++)
          for (int k=0; k<NOrbTot; k++)
             for (int l=0; l<NOrbTot; l++)
-               mem1[i+NOrbTot*j+NOrb2*k+NOrb3*l] = //(ijkl)
-               mem1[k+NOrbTot*j+NOrb2*i+NOrb3*l] = //(kjil)
-               mem1[i+NOrbTot*l+NOrb2*k+NOrb3*j] = //(ilkj)
-               mem1[k+NOrbTot*l+NOrb2*i+NOrb3*j] = //(klij)
-               mem1[j+NOrbTot*i+NOrb2*l+NOrb3*k] = //(jilk)
-               mem1[l+NOrbTot*i+NOrb2*j+NOrb3*k] = //(lijk)
-               mem1[j+NOrbTot*k+NOrb2*l+NOrb3*i] = //(jkli)
-               mem1[k+NOrbTot*l+NOrb2*j+NOrb3*i] = gVelem(i,j,k,l); //(klji)
+               mem1[i+NOrbTot*j+NOrb2*k+NOrb3*l] = gVelem(i,j,k,l); //(klji)
 
    //Step 4.3. Do Slodwin^T * mem1 -> mem2 or (ij|V|kl) -> (aj|V|kl).
    m = NOrbTot;
    n = NOrb3;
    k = NOrbTot;
-   lda = m;
+   lda = k;
    ldb = k;
    ldc = m;
    dgemm_(&trans, &notrans, &m, &n, &k, &alpha, Slodwin, &lda, mem1, &ldb, &beta, mem2, &ldc);
@@ -734,7 +727,7 @@ void MxElem::DoLodwinTfo(){
    lda = m;
    ldb = k;
    ldc = m;
-   dgemm_(&notrans, &trans, &m, &n, &k, &alpha, mem2, &lda, Slodwin, &ldb, &beta, mem1, &ldc);
+   dgemm_(&notrans, &notrans, &m, &n, &k, &alpha, mem2, &lda, Slodwin, &ldb, &beta, mem1, &ldc);
    
    //Step 4.5. Do (mem1+N^3*i) * Slodwin -> (mem2 + N^3*i) or (aj|V|kd) -> (aj|V|cd).
    m = NOrb2;
@@ -745,17 +738,25 @@ void MxElem::DoLodwinTfo(){
    ldc = m;
    for (int i=0; i<NOrbTot; i++)
       dgemm_(&notrans, &notrans, &m, &n, &k, &alpha, mem1+NOrb3*i, &lda, Slodwin, &ldb, &beta, mem2+NOrb3*i, &ldc);
-      
-   //Step 4.6. Do (mem2+N^2*i+N^3*j) * Slodwin -> (mem1+N^2*i+N^3*j) or (aj|V|cd) -> (ab|V|cd).
-   m = NOrbTot;
-   n = NOrbTot;
-   k = NOrbTot;
-   lda = m;
-   ldb = k;
-   ldc = m;
+         
+   //Step 4.6.1. Swap first two indices (aj|V|cd) -> (ja|V|cd)
    for (int i=0; i<NOrbTot; i++)
       for (int j=0; j<NOrbTot; j++)
-         dgemm_(&notrans, &notrans, &m, &n, &k, &alpha, mem2+NOrb2*i+NOrb3*j, &lda, Slodwin, &ldb, &beta, mem1+NOrb2*i+NOrb3*j, &ldc);
+         for (int k=0; k<NOrb2; k++)
+            mem1[j+NOrbTot*i+NOrb2*k] = mem2[i+NOrbTot*j+NOrb2*k];
+   //Step 4.6.2. Do Slodwin^T * (ja|V|cd)
+   m = NOrbTot;
+   n = NOrb3;
+   k = NOrbTot;
+   lda = k;
+   ldb = k;
+   ldc = m;
+   dgemm_(&trans, &notrans, &m, &n, &k, &alpha, Slodwin, &lda, mem1, &ldb, &beta, mem2, &ldc);
+   //Step 4.6.3. Swap first two columns
+   for (int i=0; i<NOrbTot; i++)
+      for (int j=0; j<NOrbTot; j++)
+         for (int k=0; k<NOrb2; k++)
+            mem1[j+NOrbTot*i+NOrb2*k] = mem2[i+NOrbTot*j+NOrb2*k];
          
    //Step 4.7. Copy back
    for (int i=0; i<NOrbTot; i++)

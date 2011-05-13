@@ -87,8 +87,6 @@ double HF::CalcEnergy(input & problem, MxElem & elements){
    int NOrbTot = elements.gNOrbTot();
    cout <<  "Number of electrons in the system: " << Nelectrons << endl;
    cout <<  "Number of basis functions in the system (per spin projection): " << NOrbTot << endl;
-   
-   cout.precision(12);
 
    //Init part 1: Declare some constants for the problem solver
 

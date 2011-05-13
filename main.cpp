@@ -60,17 +60,31 @@ void printGPL(){
 int main(void){
 
    printGPL();
+   
+   cout.precision(12);
 
    input readin("start.stp");
 
    MxElem setup(readin);
    setup.Init(readin);
    
+   setup.PrintS();
+   setup.PrintOneBody();
+   setup.PrintTwoBody();
+   
    //setup.Save();
    //setup.Load();
    //setup.RemoveFromDisk();
    
    HF HFSolver;
+   HFSolver.CalcEnergy(readin,setup);
+   
+   setup.DoLodwinTfo();
+   
+   setup.PrintS();
+   setup.PrintOneBody();
+   setup.PrintTwoBody();
+   
    HFSolver.CalcEnergy(readin,setup);
 
    return 0;
