@@ -53,7 +53,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include "preamble.h"
+#include <string>
 #include "Gauss.h"
 #include "R.h"
 
@@ -65,7 +65,7 @@ class input{
    public:
 
       //Constructor
-      input(string);
+      input(std::string);
 
       //Copy constructor
       input(input &);
@@ -77,7 +77,7 @@ class input{
       char gRotationSymm();
       int gCharge();
       int gNcores();
-      string gbasisset();
+      std::string gbasisset();
       int gcore(int);
       R * gvector(int);
       Gauss * gGaussInfo(int);
@@ -89,7 +89,7 @@ class input{
    private:
 
       //!To know the proton number of an element: elements[Z-1] = "name".
-      string * elements;
+      std::string * elements;
 
       //!Charge = number of protons - number of electrons
       int Charge;
@@ -98,7 +98,7 @@ class input{
       char RotationSymm;
 
       //!Basisset
-      string basisset;
+      std::string basisset;
 
       //!Number of cores
       int Ncores;
@@ -114,9 +114,9 @@ class input{
 
       //Helper functions
       void initelements();
-      void readinsetupfile(string);
+      void readinsetupfile(std::string);
       void fillgaussinfo();
-      int getZ(string);
+      int getZ(std::string);
 
 };
 

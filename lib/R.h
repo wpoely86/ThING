@@ -39,14 +39,14 @@
 #ifndef R_H
 #define R_H
 
-#include "preamble.h"
+#include<iostream>
 
 namespace ThING
 {
 
 class R{
 
-   friend ostream &operator<<(ostream &output, R &);
+   friend std::ostream &operator<<(std::ostream &output, R &);
 
    public:
 

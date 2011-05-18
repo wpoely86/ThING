@@ -46,11 +46,22 @@
     
 */
 
-#include "preamble.h"
+#include <iostream>
+#include <fstream>
+#include <assert.h>
+#include <cmath>
+#include <cstdlib>
+#include "lapack.h"
 #include "input.h"
 #include "R.h"
 #include "MxElem.h"
 #include "MxElemFiller.h"
+
+using std::cout;
+using std::endl;
+using std::ios;
+using std::ofstream;
+using std::ifstream;
 
 using namespace ThING;
 

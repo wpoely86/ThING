@@ -49,7 +49,6 @@
 #ifndef MXELEM_H
 #define MXELEM_H
 
-#include "preamble.h"
 #include "input.h"
 
 namespace ThING

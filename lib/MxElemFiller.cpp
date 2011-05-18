@@ -46,7 +46,10 @@
     
 */
 
-#include "preamble.h"
+#include <iostream>
+#include <cmath>
+#include <assert.h>
+#include <gmpxx.h>
 #include "input.h"
 #include "Gauss.h"
 #include "R.h"
@@ -632,7 +635,7 @@ double MxElemFiller::FunctionF(int m, double U){
       return 1.0/(2.0*m+1.0) - U/(2.0*m+3.0) + U*U/(2.0*(2.0*m+5.0));
 
    if (m<0) {
-      cout << "m<0 in FunctionF @ MxElemFiller." << endl;
+       std::cout << "m<0 in FunctionF @ MxElemFiller." << std::endl;
       assert(m>=0);
    }
 

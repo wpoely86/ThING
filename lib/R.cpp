@@ -36,7 +36,6 @@
     
 */
 
-#include "preamble.h"
 #include "R.h"
 
 using namespace ThING;
@@ -84,7 +83,7 @@ namespace ThING
  * @param output the ostream to write the info to
  * @param R_p the R of which the coordinates need to be written
  */
-ostream &operator<<(ostream &output, R & R_p){
+std::ostream &operator<<(std::ostream &output, R & R_p){
 
    output << "[ " << R_p.gxco() << " ; " << R_p.gyco() << " ; " << R_p.gzco() << " ]";
    return output;

@@ -50,10 +50,22 @@
     
 */
 
-#include "preamble.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cstdlib>
+#include <assert.h>
 #include "input.h"
 #include "Gauss.h"
-#include "R.h"
+
+using std::cout;
+using std::endl;
+using std::ostream;
+using std::ios;
+using std::ifstream;
+using std::string;
+using std::vector;
 
 using namespace ThING;
 

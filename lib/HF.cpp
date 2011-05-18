@@ -38,10 +38,16 @@
     
 */
 
-#include "preamble.h"
+#include <iostream>
+#include <cmath>
+#include <assert.h>
+#include "lapack.h"
 #include "input.h"
 #include "MxElem.h"
 #include "HF.h"
+
+using std::cout;
+using std::endl;
 
 using namespace ThING;
 

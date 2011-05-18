@@ -37,7 +37,8 @@
     
 */
 
-#include "preamble.h"
+#include <iostream>
+#include "lapack.h"
 #include "Gauss.h"
 
 using namespace ThING;
@@ -209,13 +210,13 @@ namespace ThING
  * @param output the ostream to write the info to
  * @param krusty the Gauss of which the info needs to be written
  */
-ostream &operator<<(ostream &output, Gauss & krusty){
+std::ostream &operator<<(std::ostream &output, Gauss & krusty){
 
-   output << "# types = " << krusty.gNtypes() << endl;
+   output << "# types = " << krusty.gNtypes() << std::endl;
    for (int cnt=0; cnt<krusty.gNtypes(); cnt++){
-      output << "    nr. " << cnt+1 << " is of type " << krusty.gtype(cnt) << " and has " << krusty.gNcontr(cnt) << " contractions." << endl;
+      output << "    nr. " << cnt+1 << " is of type " << krusty.gtype(cnt) << " and has " << krusty.gNcontr(cnt) << " contractions." << std::endl;
       for (int cnt2=0; cnt2<krusty.gNcontr(cnt); cnt2++){
-         output << "        contr nr. " << cnt2+1 << " has exponent " << krusty.galpha(cnt,cnt2) << " and prefactor " << krusty.gprefactors(cnt,cnt2) << endl;
+         output << "        contr nr. " << cnt2+1 << " has exponent " << krusty.galpha(cnt,cnt2) << " and prefactor " << krusty.gprefactors(cnt,cnt2) << std::endl;
       }
    }
    return output;

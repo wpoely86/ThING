@@ -40,14 +40,12 @@
 #ifndef GAUSS_H
 #define GAUSS_H
 
-#include "preamble.h"
-
 namespace ThING
 {
 
 class Gauss{
 
-   friend ostream &operator<<(ostream &output, Gauss &);
+   friend std::ostream &operator<<(std::ostream &output, Gauss &);
 
    public:
 
