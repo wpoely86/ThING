@@ -652,7 +652,7 @@ void MxElem::DoLodwinTfo(){
    double * Slodwin = new double[NOrb2];
    MakeLodwinTfo(Slodwin);
    
-   PrintFull(Slodwin,NOrbTot);
+   //PrintFull(Slodwin,NOrbTot);
    
    //Step 2. Set the overlapmatrix to 1.
    for (int i=0; i<NOrbTot; i++){

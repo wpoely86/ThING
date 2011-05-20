@@ -49,6 +49,7 @@
 #include <input.h>
 #include <MxElem.h>
 #include <HF.h>
+#include <Diag.h>
 
 using namespace std;
 
@@ -70,13 +71,17 @@ int main(void){
 
    MxElem setup(readin);
    setup.Init(readin);
-
    //setup.Save();
    //setup.Load();
    //setup.RemoveFromDisk();
 
    HF HFSolver;
    HFSolver.CalcEnergy(readin,setup);
+
+   setup.DoLodwinTfo();
+
+   Diag DiagSolver;
+   DiagSolver.CalcEnergy(readin,setup);
 
    return 0;
 

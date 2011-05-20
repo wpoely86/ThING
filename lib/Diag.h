@@ -29,16 +29,49 @@
       You should have received a copy of the GNU General Public
       License along with ThING Is Not Gaussian. If not, see 
       <http://www.gnu.org/licenses/>.
-
+      
+   File information Diag.h and Diag.cpp
+   
+      A class to compute the exact solution. More proof of concept &
+      tester of the class MxElem than an efficient algorithm. Note
+      that the overlap matrix is assumed to be the identity (as can
+      be reached by e.g. a Lodwin transformation).
+    
 */
 
-#ifndef THING_H
-#define THING_H
+#ifndef DIAG_H
+#define DIAG_H
 
-#include "ThING/Gauss.h"
-#include "ThING/HF.h"
-#include "ThING/input.h"
-#include "ThING/Diag.h"
+#include "input.h"
+#include "MxElem.h"
+
+namespace ThING
+{
+
+class Diag{
+
+   public:
+
+      //Constructor
+      Diag();
+
+      //Copy constructor
+      Diag(Diag &);
+
+      //Destructor
+      virtual ~Diag();
+
+      //Calculate the exact ground state energy
+      double CalcEnergy(input &, MxElem &);
+
+   private:
+   
+      //Give the next state
+      void Next(int *, int, int);
+
+};
+
+}
 
 #endif
 
