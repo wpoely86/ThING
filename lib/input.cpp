@@ -53,6 +53,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <vector>
 #include <cstdlib>
 #include <assert.h>
@@ -69,8 +70,9 @@ using std::vector;
 
 using namespace ThING;
 
-int MENDELJEV = 118;
-
+// define table of Mendeljev
+static const int MENDELJEV = 118;
+static char MENDELJEVTABLE[][4] = { "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Uut", "Uuq", "Uup", "Uuh", "Uus", "Uuo" };
 
 /**
  * Constructor for the input class
@@ -78,7 +80,6 @@ int MENDELJEV = 118;
  */
 input::input(string setupfile){
 
-   initelements();
    readinsetupfile(setupfile);
    fillgaussinfo();
 
@@ -91,7 +92,6 @@ input::input(string setupfile){
  */
 input::input(input & lisa){
 
-   initelements();
    Charge = lisa.gCharge();
    RotationSymm = lisa.gRotationSymm();
    basisset = lisa.gbasisset();
@@ -113,7 +113,6 @@ input::input(input & lisa){
  */
 input::~input(){
 
-   delete [] elements;
    delete [] cores;
    for (int cnt=0; cnt<Ncores; cnt++){
       delete vectors[cnt];
@@ -206,33 +205,13 @@ Gauss* input::gGaussInfo(int cnt){
 
 
 /**
- * Function to read in the elements mapper : elements[Z-1] = "name"
- */
-void input::initelements(){
-
-   elements = new string[MENDELJEV];
-   string temp;
-   int counter = 0;
-
-   ifstream elem("basissets/elements.bs", ios::in);
-   while(getline(elem,temp)) {
-      int place = temp.find("\t") + 1;
-      elements[counter] = temp.substr(place,temp.size()-place);
-      counter++;
-   }
-   elem.close();
-
-}
-
-
-/**
  * Function that establishes the reverse elements mapper : getZ("name")=Z
  */
 int input::getZ(string elem){
 
    for (int cnt=0; cnt<MENDELJEV; cnt++)
-      if (!elem.compare(elements[cnt]))
-         return cnt+1;
+       if (!strncmp(elem.c_str(),MENDELJEVTABLE[cnt],4))
+	   return cnt+1;
 
    return -1;
 
@@ -371,7 +350,9 @@ void input::fillgaussinfo(){
       marge.replace(marge.find("*"),1,"star");
    }
 
-   marge = "basissets/" + marge + ".bs";
+   string path = DATADIR;
+   path += "/ThING/basissets/";
+   marge = path + marge + ".bs";
    ifstream basiss(marge.c_str(), ios::in);
    int maggy = 0;
    int numberofgauss, Z, cnt, count;

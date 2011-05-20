@@ -34,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = doc
+subdir = basissets
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -70,8 +70,8 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(docdatadir)"
-DATA = $(docdata_DATA)
+am__installdirs = "$(DESTDIR)$(basissetsdir)"
+DATA = $(basissets_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -190,8 +190,8 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-docdatadir = $(datarootdir)/doc/ThING/
-docdata_DATA = ../README
+basissetsdir = $(datarootdir)/ThING/basissets/
+basissets_DATA = 3-21G.bs  6-311G.bs  aug-cc-pVDZ.bs  aug-cc-pVQZ.bs  aug-cc-pVTZ.bs  cc-pVDZ.bs  cc-pVQZ.bs  cc-pVTZ.bs  STO-6G.bs  SV.bs
 all: all-am
 
 .SUFFIXES:
@@ -204,9 +204,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign doc/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign basissets/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign doc/Makefile
+	  $(AUTOMAKE) --foreign basissets/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -231,26 +231,26 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-docdataDATA: $(docdata_DATA)
+install-basissetsDATA: $(basissets_DATA)
 	@$(NORMAL_INSTALL)
-	test -z "$(docdatadir)" || $(MKDIR_P) "$(DESTDIR)$(docdatadir)"
-	@list='$(docdata_DATA)'; test -n "$(docdatadir)" || list=; \
+	test -z "$(basissetsdir)" || $(MKDIR_P) "$(DESTDIR)$(basissetsdir)"
+	@list='$(basissets_DATA)'; test -n "$(basissetsdir)" || list=; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(docdatadir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(docdatadir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(basissetsdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(basissetsdir)" || exit $$?; \
 	done
 
-uninstall-docdataDATA:
+uninstall-basissetsDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(docdata_DATA)'; test -n "$(docdatadir)" || list=; \
+	@list='$(basissets_DATA)'; test -n "$(basissetsdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	test -n "$$files" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(docdatadir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(docdatadir)" && rm -f $$files
+	echo " ( cd '$(DESTDIR)$(basissetsdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(basissetsdir)" && rm -f $$files
 tags: TAGS
 TAGS:
 
@@ -292,7 +292,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(docdatadir)"; do \
+	for dir in "$(DESTDIR)$(basissetsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -340,7 +340,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-docdataDATA
+install-data-am: install-basissetsDATA
 
 install-dvi: install-dvi-am
 
@@ -384,21 +384,21 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-docdataDATA
+uninstall-am: uninstall-basissetsDATA
 
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic clean-libtool \
 	distclean distclean-generic distclean-libtool distdir dvi \
 	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-docdataDATA install-dvi \
+	install-basissetsDATA install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
 	install-strip installcheck installcheck-am installdirs \
 	maintainer-clean maintainer-clean-generic mostlyclean \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	uninstall uninstall-am uninstall-docdataDATA
+	uninstall uninstall-am uninstall-basissetsDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

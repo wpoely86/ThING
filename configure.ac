@@ -63,7 +63,7 @@ fi
 AC_SUBST([AM_CXXFLAGS])
 
 
-AC_CONFIG_FILES([Makefile lib/Makefile doc/Makefile tools/Makefile lib/libThING.pc])
+AC_CONFIG_FILES([Makefile lib/Makefile doc/Makefile tools/Makefile lib/libThING.pc basissets/Makefile examples/Makefile])
 
 
 AC_OUTPUT

@@ -88,9 +88,6 @@ class input{
 
    private:
 
-      //!To know the proton number of an element: elements[Z-1] = "name".
-      std::string * elements;
-
       //!Charge = number of protons - number of electrons
       int Charge;
       
@@ -113,7 +110,6 @@ class input{
       Gauss ** GaussInfo;
 
       //Helper functions
-      void initelements();
       void readinsetupfile(std::string);
       void fillgaussinfo();
       int getZ(std::string);

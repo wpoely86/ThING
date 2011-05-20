@@ -228,6 +228,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+AM_CPPFLAGS = -DDATADIR='"$(datadir)"'
 lib_LTLIBRARIES = libThING.la
 libThING_la_SOURCES = Gauss.cpp  Gauss.h  HF.cpp  HF.h  input.cpp  input.h  lapack.h  MxElem.cpp  MxElemFiller.cpp  MxElemFiller.h  MxElem.h  R.cpp  R.h  Diag.cpp  Diag.h
 LIBTHING_LIBRARY_VERSION = 1:0:0

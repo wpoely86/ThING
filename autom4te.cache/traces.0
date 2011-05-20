@@ -526,7 +526,7 @@ m4trace:configure.ac:59: -1- AH_OUTPUT([NDEBUG], [/* No-debug Mode */
 m4trace:configure.ac:63: -1- AC_SUBST([AM_CXXFLAGS])
 m4trace:configure.ac:63: -1- AC_SUBST_TRACE([AM_CXXFLAGS])
 m4trace:configure.ac:63: -1- m4_pattern_allow([^AM_CXXFLAGS$])
-m4trace:configure.ac:66: -1- AC_CONFIG_FILES([Makefile lib/Makefile doc/Makefile tools/Makefile lib/libThING.pc])
+m4trace:configure.ac:66: -1- AC_CONFIG_FILES([Makefile lib/Makefile doc/Makefile tools/Makefile lib/libThING.pc basissets/Makefile examples/Makefile])
 m4trace:configure.ac:69: -1- AC_SUBST([LIB@&t@OBJS], [$ac_libobjs])
 m4trace:configure.ac:69: -1- AC_SUBST_TRACE([LIB@&t@OBJS])
 m4trace:configure.ac:69: -1- m4_pattern_allow([^LIB@&t@OBJS$])
