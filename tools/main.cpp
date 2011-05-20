@@ -46,10 +46,11 @@
     
 */
 
-#include "preamble.h"
-#include "input.h"
-#include "MxElem.h"
-#include "HF.h"
+#include <input.h>
+#include <MxElem.h>
+#include <HF.h>
+
+using namespace std;
 
 void printGPL(){
 
