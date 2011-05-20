@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: ThING
+Description: ThING Is Not Gaussian calculates gaussian contractions using recursion relation
+Version: @VERSION@
+Libs: -L${libdir} -lThING
+Cflags: -I${includedir}

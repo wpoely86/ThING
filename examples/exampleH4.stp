@@ -1,0 +1,13 @@
+Basisset=STO-6G
+Charge=0
+RotationSymmetry=n
+
+Distances=0
+
+Cores=4
+1 H 0 0 0
+2 H 0 0 1.40112
+3 H 0 0 3.90112
+4 H 0 0 5.30224
+
+
